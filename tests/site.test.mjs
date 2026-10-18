@@ -113,7 +113,7 @@ test('current PhD students show confirmed affiliations without invented photos, 
     assert.match(members[2], /Shanghai Jiao Tong University|上海交通大学/);
     assert.match(members[3], /The Hong Kong Polytechnic University|香港理工大学/);
     for (const member of members.slice(2)) {
-      assert.match(member, /Eastern Institute of Technology|东方理工/);
+      assert.match(member, locale === 'en' ? /Eastern Institute of Technology, Ningbo/ : /东方理工/);
       assert.match(member, /joint|联培|联合培养/i);
     }
   }
