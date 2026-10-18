@@ -102,7 +102,6 @@ selected: false
 
 ```sh
 npm run verify:pages
-node scripts/prepare-pages.mjs
 ```
 
 `build:pages` 自动设置正式域名及根路径 `/`，输出到 `dist-pages/`，不覆盖本地构建 `dist/`。这是 GitHub 用户站点，不应再增加 `/shiyi-chen-web/` 子路径。导航、Markdown 站内链接、图片、语言切换与 SEO 地址均按新域名生成。
