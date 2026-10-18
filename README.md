@@ -70,9 +70,17 @@ selected: false
 
 ### 加一名在读博士生
 
-复制 `src/content/people/xinping-yang.md`，编辑其中的中英文姓名、职务、所属院校和 `order`（显示顺序）。职务为 `PhD student` / `博士研究生`，`description` / `descriptionZh` 仅填写已确认的院校及联合培养关系，不补写未经确认的个人经历。不需要编辑网页组件。
+复制 `src/content/people/xinping-yang.md`，编辑其中的中英文姓名、职务、所属院校、`group`（院校分组）和 `order`（组内显示顺序）。职务为 `PhD student` / `博士研究生`，`description` / `descriptionZh` 仅填写已确认的院校及联合培养关系，不补写未经确认的个人经历。英文院校名保留完整的 `Eastern Institute of Technology, Ningbo`。在已有分组内加人不需要编辑网页组件。
 
-当前在读博士生依次为 Xinping Yang 杨鑫平（北京大学）、Zhongxin Yang 杨忠鑫（北京大学）、Shibin Zhang 张时斌（上海交通大学与宁波东方理工大学联合培养）、Yanqi Wang 王彦祺（香港理工大学与宁波东方理工大学联合培养）。`order` 控制显示顺序；如确需固定某位成员最后，可设置 `last: true`。
+当前在读博士生按以下固定顺序分组：
+
+| `group` 必填值 | 中英文分组标题 | 当前成员 |
+| --- | --- | --- |
+| `peking` | Peking University / 北京大学 | Xinping Yang 杨鑫平、Zhongxin Yang 杨忠鑫 |
+| `sjtu-eit` | Shanghai Jiao Tong University & Eastern Institute of Technology, Ningbo / 上海交通大学 & 宁波东方理工大学 | Shibin Zhang 张时斌 |
+| `polyu-eit` | The Hong Kong Polytechnic University & Eastern Institute of Technology, Ningbo / 香港理工大学 & 宁波东方理工大学 | Yanqi Wang 王彦祺 |
+
+`order` 控制组内显示顺序；如确需固定某位成员在组内最后，可设置 `last: true`。新增院校分组时，需同步更新 `src/content.config.ts` 的 `group` 枚举和 `src/components/AcademicPage.astro` 的固定中英文分组列表。
 
 `image` 和 `homepage` 均可省略；没有已确认的照片或个人主页时，不填写占位值，页面自动显示全宽文字卡片。有授权照片时放进 `public/images/`，`image` 填 `/images/文件名.jpg`。成员外链不是普通个人主页时，可以填写 `homepageLabel` / `homepageLabelZh` 修改链接文字（如 Google Scholar）。
 
