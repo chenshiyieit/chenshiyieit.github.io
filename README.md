@@ -36,7 +36,7 @@ npm run test:browser
 | 英文首页、简介、研究介绍 | `src/content/pages/en/*.md` |
 | 中文对应内容 | `src/content/pages/zh/*.md` |
 | 论文（中英共用） | `src/content/publications/*.md` |
-| 当前成员（一个文件包含中英字段） | `src/content/people/*.md` |
+| 在读博士生（一个文件包含中英字段） | `src/content/people/*.md` |
 | 往届成员 | `src/content/pages/en/alumni.md`、`zh/alumni.md` |
 | 照片与中英文说明 | `src/content/gallery/*.md` |
 | 图片文件 | `public/images/` |
@@ -68,11 +68,13 @@ selected: false
 - 论文按年份自动排序；两种语言共用同一份数据。
 - `source` 为论文核对来源，目前部分是官方论文列表或 Scholar。拿到精确论文地址后可以替换；有 `doi` 时优先链接 DOI。
 
-### 加一名成员
+### 加一名在读博士生
 
-复制 `src/content/people/shengqi-zhang.md`，编辑其中的中英文姓名、职务、简介、个人主页和 `order`（显示顺序）。照片放进 `public/images/`，`image` 填 `/images/文件名.jpg`。不需要编辑网页组件。
+复制 `src/content/people/xinping-yang.md`，编辑其中的中英文姓名、职务、所属院校和 `order`（显示顺序）。职务为 `PhD student` / `博士研究生`，`description` / `descriptionZh` 仅填写已确认的院校及联合培养关系，不补写未经确认的个人经历。不需要编辑网页组件。
 
-当前团队依次为姜汉博、章盛祺、韦雁机。`order` 控制显示顺序；如确需固定某位成员最后，可设置 `last: true`。成员外链不是普通个人主页时，可以填写 `homepageLabel` / `homepageLabelZh` 修改链接文字（如 Google Scholar）。
+当前在读博士生依次为 Xinping Yang 杨鑫平（北京大学）、Zhongxin Yang 杨忠鑫（北京大学）、Shibin Zhang 张时斌（上海交通大学与宁波东方理工大学联合培养）、Yanqi Wang 王彦祺（香港理工大学与宁波东方理工大学联合培养）。`order` 控制显示顺序；如确需固定某位成员最后，可设置 `last: true`。
+
+`image` 和 `homepage` 均可省略；没有已确认的照片或个人主页时，不填写占位值，页面自动显示全宽文字卡片。有授权照片时放进 `public/images/`，`image` 填 `/images/文件名.jpg`。成员外链不是普通个人主页时，可以填写 `homepageLabel` / `homepageLabelZh` 修改链接文字（如 Google Scholar）。
 
 课题组负责人使用 `pi: true`，页面会在职称后加上 PI；默认不显示。
 
