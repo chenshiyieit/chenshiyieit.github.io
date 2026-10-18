@@ -35,6 +35,7 @@ const people = defineCollection({
   schema: z.object({
     name: z.string(),
     nameZh: z.string(),
+    group: z.enum(['peking', 'sjtu-eit', 'polyu-eit']),
     role: z.string(),
     roleZh: z.string(),
     description: z.string(),

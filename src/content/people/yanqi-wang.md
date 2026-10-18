@@ -1,6 +1,7 @@
 ---
 name: Yanqi Wang
 nameZh: 王彦祺
+group: polyu-eit
 role: PhD student
 roleZh: 博士研究生
 description: Joint training at The Hong Kong Polytechnic University and Eastern Institute of Technology, Ningbo
