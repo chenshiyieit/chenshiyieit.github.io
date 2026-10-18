@@ -25,6 +25,7 @@ eyebrow: Group alumni
 
 ### Undergraduate students
 
+- [Xiang Yang 杨翔](https://www.me.psu.edu/department/directory-detail-g.aspx?q=xzy48) — B.S., Department of Mechanics and Engineering Science, College of Engineering, Peking University, 2012
 - Han Liu 刘晗
 - Site Hu 胡斯特
 

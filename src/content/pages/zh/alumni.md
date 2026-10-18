@@ -25,6 +25,7 @@ eyebrow: 历史课题组成员
 
 ### 本科生
 
+- [Xiang Yang 杨翔](https://www.me.psu.edu/department/directory-detail-g.aspx?q=xzy48) — 2012 年本科毕业于北京大学工学院力学与工程科学系
 - Han Liu 刘晗
 - Site Hu 胡斯特
 
