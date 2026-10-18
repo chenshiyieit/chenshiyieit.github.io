@@ -69,6 +69,38 @@ test('people show the current PhD students heading in both languages', () => {
   }
 });
 
+test('current PhD students form three correctly labelled school groups in both languages', () => {
+  const groups = [
+    { id: 'peking', en: 'Peking University', zh: '北京大学', names: [['Xinping Yang', '杨鑫平'], ['Zhongxin Yang', '杨忠鑫']] },
+    { id: 'sjtu-eit', en: 'Shanghai Jiao Tong University & Eastern Institute of Technology, Ningbo', zh: '上海交通大学 & 宁波东方理工大学', names: [['Shibin Zhang', '张时斌']] },
+    { id: 'polyu-eit', en: 'The Hong Kong Polytechnic University & Eastern Institute of Technology, Ningbo', zh: '香港理工大学 & 宁波东方理工大学', names: [['Yanqi Wang', '王彦祺']] },
+  ];
+  const text = (html) => html.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim();
+  for (const locale of ['en', 'zh']) {
+    const html = readPage(locale, 'people/');
+    const current = html.split('<section aria-labelledby="current-members">')[1]?.split('<section class="alumni-section"')[0];
+    assert.ok(current, `Missing current students section in ${locale}`);
+    assert.doesNotMatch(text(current), /\bEIT\b/, 'Use the full university name in visitor-facing text');
+    const sections = [...current.matchAll(/<section class="member-group" aria-labelledby="([^"]+)">([\s\S]*?)<\/section>/g)];
+    assert.equal(sections.length, 3, `Expected three school sections in ${locale}`);
+    assert.equal([...current.matchAll(/<article class="member">/g)].length, 4);
+    for (const [index, group] of groups.entries()) {
+      const [, headingId, body] = sections[index];
+      assert.equal(headingId, `school-${group.id}`);
+      const heading = body.match(/<h3 id="([^"]+)"[^>]*>([\s\S]*?)<\/h3>/);
+      assert.ok(heading, `Missing school h3 in ${locale}/${group.id}`);
+      assert.equal(heading[1], headingId);
+      assert.equal(text(heading[2]), group[locale]);
+      const members = [...body.matchAll(/<article class="member">([\s\S]*?)<\/article>/g)];
+      assert.deepEqual(members.map(([, member]) => {
+        const name = member.match(/<h4>([\s\S]*?)<\/h4>/);
+        assert.ok(name, `Missing member h4 in ${locale}/${group.id}`);
+        return text(name[1]);
+      }), group.names.map(([en, zh]) => locale === 'en' ? `${en} ${zh}` : `${zh} ${en}`));
+    }
+  }
+});
+
 test('every past member has an English and Chinese name in both locales', () => {
   for (const locale of ['en', 'zh']) {
     const alumni = readPage(locale, 'people/').match(/class="prose alumni-content">([\s\S]*?)<\/div>/)?.[1];
@@ -96,8 +128,12 @@ test('Xiang Yang appears among undergraduate alumni with his graduation year and
 test('current students contain exactly the four confirmed names and no former faculty', () => {
   for (const locale of ['en', 'zh']) {
     const html = readPage(locale, 'people/');
-    const members = [...html.matchAll(/<article class="member">[\s\S]*?<h3>([\s\S]*?)<\/h3>/g)]
-      .map((match) => match[1].replace(/<[^>]+>/g, ''));
+    const members = [...html.matchAll(/<article class="member">([\s\S]*?)<\/article>/g)]
+      .map((match) => {
+        const name = match[1].match(/<h4>([\s\S]*?)<\/h4>/);
+        assert.ok(name, `Missing member name in ${locale}`);
+        return name[1].replace(/<[^>]+>/g, '');
+      });
     assert.equal(members.length, 4);
     for (const [index, name] of ['杨鑫平', '杨忠鑫', '张时斌', '王彦祺'].entries()) assert.ok(members[index].includes(name));
     assert.doesNotMatch(html, /李岩松|姜汉博|章盛祺|韦雁机|杨永超/);

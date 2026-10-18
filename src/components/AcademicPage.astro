@@ -18,6 +18,11 @@ const selected = papers.filter((paper) => paper.data.selected)
   .sort((a, b) => (a.data.selectedRank ?? Infinity) - (b.data.selectedRank ?? Infinity));
 const years = [...new Set(papers.map((paper) => paper.data.year))];
 const members = page === 'people' ? (await getCollection('people')).sort(comparePeople) : [];
+const memberGroups = [
+  { id: 'peking', en: 'Peking University', zh: '北京大学' },
+  { id: 'sjtu-eit', en: 'Shanghai Jiao Tong University & Eastern Institute of Technology, Ningbo', zh: '上海交通大学 & 宁波东方理工大学' },
+  { id: 'polyu-eit', en: 'The Hong Kong Polytechnic University & Eastern Institute of Technology, Ningbo', zh: '香港理工大学 & 宁波东方理工大学' },
+];
 const photos = page === 'gallery' ? (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order) : [];
 ---
 <AcademicLayout locale={locale} slug={slug} title={entry.data.title} description={entry.data.description} eyebrow={entry.data.eyebrow}>
@@ -43,14 +48,17 @@ const photos = page === 'gallery' ? (await getCollection('gallery')).sort((a, b)
   {page === 'people' && <>
     <section aria-labelledby="current-members">
       <h2 id="current-members" class="section-title">{en ? 'Current PhD Students' : '在读博士生'}</h2>
-      <div class="members">{members.map(({ data: member }) => <article class="member">
-        {member.image && <img src={assetPath(member.image)} alt={en ? member.name : member.nameZh} width="160" height="190" loading="lazy" />}
-        <div><h3>{en ? member.name : member.nameZh} <span class="member-native">{en ? member.nameZh : member.name}</span></h3>
-          <p class="member-role">{en ? member.role : member.roleZh}{member.pi && <span class="member-pi" title={en ? 'Principal Investigator' : '课题组负责人'}> · PI</span>}</p>
-          <p>{en ? member.description : member.descriptionZh}</p>
-          {member.homepage && <a class="small-link" href={member.homepage}>{en ? member.homepageLabel : member.homepageLabelZh} <span aria-hidden="true">↗</span></a>}
-        </div>
-      </article>)}</div>
+      {memberGroups.map((group) => <section class="member-group" aria-labelledby={`school-${group.id}`}>
+        <h3 id={`school-${group.id}`} class="member-group-title">{en ? group.en : group.zh}</h3>
+        <div class="members">{members.filter(({ data: member }) => member.group === group.id).map(({ data: member }) => <article class="member">
+          {member.image && <img src={assetPath(member.image)} alt={en ? member.name : member.nameZh} width="160" height="190" loading="lazy" />}
+          <div><h4>{en ? member.name : member.nameZh} <span class="member-native">{en ? member.nameZh : member.name}</span></h4>
+            <p class="member-role">{en ? member.role : member.roleZh}{member.pi && <span class="member-pi" title={en ? 'Principal Investigator' : '课题组负责人'}> · PI</span>}</p>
+            <p>{en ? member.description : member.descriptionZh}</p>
+            {member.homepage && <a class="small-link" href={member.homepage}>{en ? member.homepageLabel : member.homepageLabelZh} <span aria-hidden="true">↗</span></a>}
+          </div>
+        </article>)}</div>
+      </section>)}
     </section>
     <section class="alumni-section" aria-labelledby="alumni-heading">
       <h2 id="alumni-heading">{en ? 'Past members' : '往届成员'}</h2>
