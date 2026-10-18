@@ -62,12 +62,10 @@ test('both languages display the same bibliography without duplicate paper title
   assert.equal(new Set(english.map((title) => title.toLowerCase())).size, english.length);
 });
 
-test('people include faculty members and their homepage links', () => {
+test('people show the current PhD students heading in both languages', () => {
   for (const locale of ['en', 'zh']) {
     const html = readPage(locale, 'people/');
-    assert.match(html, /Shengqi Zhang|章盛祺/);
-    assert.match(html, /https:\/\/faculty.eitech.edu.cn\/mech\/zsq_en\/main.htm/);
-    assert.match(html, /https:\/\/faculty.eitech.edu.cn\/mech\/jhb\/main.htm/);
+    assert.match(html, locale === 'en' ? /Current PhD Students/ : /在读博士生/);
   }
 });
 
@@ -77,34 +75,47 @@ test('every past member has an English and Chinese name in both locales', () => 
     assert.ok(alumni, `Missing alumni section in ${locale}`);
     const names = [...alumni.matchAll(/<li>([\s\S]*?)<\/li>/g)]
       .map((match) => match[1].replace(/<[^>]+>/g, ''));
-    assert.equal(names.length, 22);
+    assert.equal(names.length, 23);
     for (const name of names) {
       assert.match(name, /^[A-Za-z]+(?:[- ][A-Za-z]+)+\s+[\p{Script=Han}]{2,}/u, `${locale}: ${name}`);
     }
   }
 });
 
-test('current team contains only the three requested faculty members', () => {
+test('Xiang Yang appears among undergraduate alumni with his graduation year and homepage', () => {
+  for (const locale of ['en', 'zh']) {
+    const html = readPage(locale, 'people/');
+    const undergraduates = html.match(/<h3[^>]*>(?:Undergraduate students|本科生)<\/h3>([\s\S]*?)<h3/);
+    assert.ok(undergraduates, `Missing undergraduate section in ${locale}`);
+    assert.match(undergraduates[1], /Xiang Yang 杨翔/);
+    assert.match(undergraduates[1], /2012/);
+    assert.match(undergraduates[1], /https:\/\/www\.me\.psu\.edu\/department\/directory-detail-g\.aspx\?q=xzy48/);
+  }
+});
+
+test('current students contain exactly the four confirmed names and no former faculty', () => {
   for (const locale of ['en', 'zh']) {
     const html = readPage(locale, 'people/');
     const members = [...html.matchAll(/<article class="member">[\s\S]*?<h3>([\s\S]*?)<\/h3>/g)]
       .map((match) => match[1].replace(/<[^>]+>/g, ''));
-    assert.equal(members.length, 3);
-    assert.match(members[0], /姜汉博/);
-    assert.match(members[1], /章盛祺/);
-    assert.match(members[2], /韦雁机/);
-    assert.doesNotMatch(html, /Yansong Li|李岩松|yansong-li\.jpg/);
-    assert.ok(members.some((name) => name.includes('韦雁机')));
-    assert.ok(members.some((name) => name.includes('姜汉博')));
-    assert.ok(members.every((name) => !name.includes('杨永超')));
+    assert.equal(members.length, 4);
+    for (const [index, name] of ['杨鑫平', '杨忠鑫', '张时斌', '王彦祺'].entries()) assert.ok(members[index].includes(name));
+    assert.doesNotMatch(html, /李岩松|姜汉博|章盛祺|韦雁机|杨永超/);
   }
 });
 
-test('all three current faculty members have PI labels', () => {
+test('current PhD students show confirmed affiliations without invented photos, links or PI labels', () => {
   for (const locale of ['en', 'zh']) {
     const members = [...readPage(locale, 'people/').matchAll(/<article class="member">([\s\S]*?)<\/article>/g)].map((match) => match[1]);
-    assert.equal(members.length, 3);
-    for (const member of members) assert.match(member, /class="member-pi"/);
+    assert.equal(members.length, 4);
+    for (const member of members) assert.doesNotMatch(member, /class="member-pi"|<img|<a /);
+    for (const member of members.slice(0, 2)) assert.match(member, /Peking University|北京大学/);
+    assert.match(members[2], /Shanghai Jiao Tong University|上海交通大学/);
+    assert.match(members[3], /The Hong Kong Polytechnic University|香港理工大学/);
+    for (const member of members.slice(2)) {
+      assert.match(member, /Eastern Institute of Technology|东方理工/);
+      assert.match(member, /joint|联培|联合培养/i);
+    }
   }
 });
 
