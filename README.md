@@ -72,7 +72,7 @@ selected: false
 
 复制 `src/content/people/shengqi-zhang.md`，编辑其中的中英文姓名、职务、简介、个人主页和 `order`（显示顺序）。照片放进 `public/images/`，`image` 填 `/images/文件名.jpg`。不需要编辑网页组件。
 
-李岩松的文件含 `last: true`，保证固定排在最后；其他成员不要设置该字段。成员外链不是普通个人主页时，可以填写 `homepageLabel` / `homepageLabelZh` 修改链接文字（如 Google Scholar）。
+当前团队依次为姜汉博、章盛祺、韦雁机。`order` 控制显示顺序；如确需固定某位成员最后，可设置 `last: true`。成员外链不是普通个人主页时，可以填写 `homepageLabel` / `homepageLabelZh` 修改链接文字（如 Google Scholar）。
 
 课题组负责人使用 `pi: true`，页面会在职称后加上 PI；默认不显示。
 

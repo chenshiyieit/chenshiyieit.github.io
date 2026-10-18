@@ -62,13 +62,12 @@ test('both languages display the same bibliography without duplicate paper title
   assert.equal(new Set(english.map((title) => title.toLowerCase())).size, english.length);
 });
 
-test('people include both requested members and personal homepage links', () => {
+test('people include faculty members and their homepage links', () => {
   for (const locale of ['en', 'zh']) {
     const html = readPage(locale, 'people/');
-    assert.match(html, /Yansong Li|李岩松/);
     assert.match(html, /Shengqi Zhang|章盛祺/);
-    assert.match(html, /https:\/\/jackyansongli.github.io\//);
     assert.match(html, /https:\/\/faculty.eitech.edu.cn\/mech\/zsq_en\/main.htm/);
+    assert.match(html, /https:\/\/faculty.eitech.edu.cn\/mech\/jhb\/main.htm/);
   }
 });
 
@@ -85,27 +84,27 @@ test('every past member has an English and Chinese name in both locales', () => 
   }
 });
 
-test('current team contains the requested four members with Yansong Li last', () => {
+test('current team contains only the three requested faculty members', () => {
   for (const locale of ['en', 'zh']) {
     const html = readPage(locale, 'people/');
     const members = [...html.matchAll(/<article class="member">[\s\S]*?<h3>([\s\S]*?)<\/h3>/g)]
       .map((match) => match[1].replace(/<[^>]+>/g, ''));
-    assert.equal(members.length, 4);
+    assert.equal(members.length, 3);
     assert.match(members[0], /姜汉博/);
     assert.match(members[1], /章盛祺/);
-    assert.match(members.at(-1), /李岩松/);
+    assert.match(members[2], /韦雁机/);
+    assert.doesNotMatch(html, /Yansong Li|李岩松|yansong-li\.jpg/);
     assert.ok(members.some((name) => name.includes('韦雁机')));
     assert.ok(members.some((name) => name.includes('姜汉博')));
     assert.ok(members.every((name) => !name.includes('杨永超')));
   }
 });
 
-test('PI is marked on the three faculty members but not Yansong Li', () => {
+test('all three current faculty members have PI labels', () => {
   for (const locale of ['en', 'zh']) {
     const members = [...readPage(locale, 'people/').matchAll(/<article class="member">([\s\S]*?)<\/article>/g)].map((match) => match[1]);
-    assert.equal(members.length, 4);
-    for (const member of members.slice(0, 3)) assert.match(member, /class="member-pi"/);
-    assert.doesNotMatch(members[3], /class="member-pi"/);
+    assert.equal(members.length, 3);
+    for (const member of members) assert.match(member, /class="member-pi"/);
   }
 });
 
