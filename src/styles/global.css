@@ -90,6 +90,7 @@ h3 { font-size: 1rem; line-height: 1.55; }
 .section-title { margin: 32px 0 20px; }
 .member { display: grid; grid-template-columns: 126px minmax(0, 1fr); gap: 27px; border-bottom: 1px solid var(--line); padding: 25px 0; }
 .member:last-child { border: 0; }
+.member > div:only-child { grid-column: 1 / -1; }
 .member img { width: 126px; height: 151px; object-fit: cover; object-position: center 20%; }
 .member h3 { margin: 0 0 7px; font-size: 16px; }
 .member-native { font: 400 13px var(--body); color: var(--muted); display: inline-block; margin-left: 6px; }
