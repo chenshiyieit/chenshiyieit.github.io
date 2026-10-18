@@ -1,0 +1,14 @@
+---
+import AcademicPage from '../../components/AcademicPage.astro';
+import { locales, navigation, type Locale } from '../../lib/site';
+
+export function getStaticPaths() {
+  return locales.flatMap((locale) => navigation.map((item) => ({
+    params: { locale, slug: item.slug || undefined },
+    props: { locale, slug: item.slug, page: item.key },
+  })));
+}
+
+interface Props { locale: Locale; slug: string; page: string; }
+---
+<AcademicPage {...Astro.props} />

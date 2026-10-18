@@ -1,0 +1,7 @@
+---
+import AcademicLayout from '../layouts/AcademicLayout.astro';
+import { pathFor } from '../lib/site';
+---
+<AcademicLayout locale="en" title="Page not found" description="Return to Shiyi Chen’s academic homepage." eyebrow="404">
+  <div class="prose"><p>This page could not be found. / 未找到此页面。</p><p><a href={pathFor('en')}>English homepage →</a></p><p><a href={pathFor('zh')}>中文首页 →</a></p></div>
+</AcademicLayout>

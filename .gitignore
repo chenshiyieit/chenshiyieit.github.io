@@ -1,0 +1,13 @@
+node_modules/
+dist/
+dist-pages/
+.pages-deploy/
+.astro/
+.DS_Store
+.env
+.env.*
+artifacts/
+.playwright-mcp/
+.sisyphus/
+docs/
+.git-source-backup/

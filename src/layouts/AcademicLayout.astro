@@ -1,0 +1,95 @@
+---
+import '@fontsource/raleway/400.css';
+import '@fontsource/raleway/700.css';
+import '@fontsource/raleway/800.css';
+import '@fontsource/source-sans-pro/400.css';
+import '@fontsource/source-sans-pro/600.css';
+import '@fontsource/source-sans-pro/400-italic.css';
+import '../styles/global.css';
+import { getEntry } from 'astro:content';
+import { navigation, pathFor, assetPath, scholar, type Locale } from '../lib/site';
+
+interface Props { locale: Locale; slug?: string; title: string; description: string; eyebrow: string; }
+const { locale, slug = '', title, description, eyebrow } = Astro.props;
+const en = locale === 'en';
+const counterpart = pathFor(en ? 'zh' : 'en', slug);
+const canonical = Astro.site ? new URL(pathFor(locale, slug), Astro.site) : undefined;
+const profileEntry = await getEntry('profile', 'profile');
+if (!profileEntry) throw new Error('Missing src/content/profile.md');
+const profile = profileEntry.data;
+---
+<!doctype html>
+<html lang={en ? 'en' : 'zh-CN'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f4f4f4" />
+    <title>{title} — {en ? 'Shiyi Chen' : '陈十一'}</title>
+    <link rel="icon" href={assetPath('/favicon.svg')} type="image/svg+xml" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {Astro.site && <>
+      <link rel="alternate" hreflang="en" href={new URL(pathFor('en', slug), Astro.site)} />
+      <link rel="alternate" hreflang="zh-CN" href={new URL(pathFor('zh', slug), Astro.site)} />
+      <link rel="alternate" hreflang="x-default" href={new URL(pathFor('en', slug), Astro.site)} />
+    </>}
+    <meta property="og:title" content={`${title} — Shiyi Chen`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={en ? 'en_US' : 'zh_CN'} />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">{en ? 'Skip to content' : '跳到正文'}</a>
+    <header class="site-header">
+      <a class="wordmark" href={pathFor(locale)}>{profile.name.toUpperCase()} <span lang="zh-CN">{profile.nameZh}</span></a>
+      <nav class="desktop-nav" aria-label={en ? 'Main navigation' : '主导航'}>
+        {navigation.map((item) => <a href={pathFor(locale, item.slug)} aria-current={slug === item.slug ? 'page' : undefined}>{item[locale]}</a>)}
+      </nav>
+      <a class="language-switch" href={counterpart} lang={en ? 'zh-CN' : 'en'} hreflang={en ? 'zh-CN' : 'en'} aria-label={en ? 'Switch this page to Chinese' : '切换本页至英文'}>{en ? '中文' : 'EN'} <span aria-hidden="true">↗</span></a>
+      <details class="mobile-menu">
+        <summary aria-label={en ? 'Open navigation' : '打开导航'}><span class="menu-lines" aria-hidden="true">☰</span><span>{en ? 'Menu' : '菜单'}</span></summary>
+        <nav aria-label={en ? 'Mobile navigation' : '移动端导航'}>
+          {navigation.map((item) => <a href={pathFor(locale, item.slug)} aria-current={slug === item.slug ? 'page' : undefined}>{item[locale]}</a>)}
+        </nav>
+      </details>
+    </header>
+
+    <div class="site-grid">
+      <aside class="sidebar" aria-label={en ? 'Profile and contact' : '个人信息与联系'}>
+        <div class="profile-intro">
+          <a class="portrait-link" href={pathFor(locale, 'biography')} aria-label={en ? 'Read Shiyi Chen’s biography' : '阅读陈十一的个人简介'}>
+            <img class="portrait" src={assetPath(profile.image)} alt={en ? `Portrait of ${profile.name}` : `${profile.nameZh}肖像`} width="256" height="300" fetchpriority="high" />
+          </a>
+          <p class="profile-kicker">{en ? 'PROFESSOR' : '教授 · 院士'}</p>
+          <h2 class="profile-name">{en ? profile.name : profile.nameZh}</h2>
+          <p class="profile-native" lang={en ? 'zh-CN' : 'en'}>{en ? profile.nameZh : profile.name}</p>
+          <p class="profile-position">{en ? profile.position : profile.positionZh}</p>
+          <p class="profile-academy">{en ? profile.academy : profile.academyZh}</p>
+          <a class="institution" href={profile.institutionUrl}>{en ? profile.institution : profile.institutionZh}</a>
+        </div>
+        <section class="contact-block">
+          <h2>{en ? 'Contact' : '联系方式'}</h2>
+          <a class="email" href={`mailto:${profile.email}`}>{profile.email}</a>
+          <p>{(en ? profile.address : profile.addressZh).map((line, index) => <>{index > 0 && <br />}{line}</>)}</p>
+          <a class="sidebar-link" href={scholar}>Google Scholar <span aria-hidden="true">↗</span></a>
+          <a class="sidebar-link" href={profile.universityProfile}>{en ? 'University profile' : '学校个人主页'} <span aria-hidden="true">↗</span></a>
+        </section>
+        <footer class="sidebar-footer">
+          <p>© {new Date().getFullYear()} {en ? 'Shiyi Chen' : '陈十一'}</p>
+          <p>{en ? 'Turbulence · Computation · Discovery' : '湍流 · 计算 · 探索'}</p>
+        </footer>
+      </aside>
+
+      <main id="content" class="main-content" tabindex="-1">
+        <article class="paper-panel">
+          <header class="page-heading">
+            <p class="eyebrow">{eyebrow}</p>
+            <h1>{title}</h1>
+          </header>
+          <div class="page-body"><slot /></div>
+        </article>
+        <div class="bottom-line"><span>{en ? 'Eastern Institute of Technology, Ningbo' : '宁波东方理工大学'}</span><a href="#content">{en ? 'Back to top' : '返回顶部'} <span aria-hidden="true">↑</span></a></div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../lib/site';
+interface Props { paper: CollectionEntry<'publications'>; locale: Locale; }
+const { paper, locale } = Astro.props;
+const p = paper.data;
+---
+<li class="publication">
+  <h3><a href={p.doi || p.source}>{p.title}</a></h3>
+  <p class="publication-authors">{p.authors}</p>
+  <p class="publication-citation"><em>{p.venue}</em>{p.volume && ` ${p.volume}`}{p.pages && `, ${p.pages}`} ({p.year}).
+    {p.kind === 'preprint' && <span class="preprint">{locale === 'en' ? 'Preprint' : '预印本'}</span>}
+    <a class="paper-link" href={p.doi || p.source}>{p.doi ? 'DOI' : locale === 'en' ? 'Source' : '来源'} <span aria-hidden="true">↗</span></a>
+  </p>
+</li>
