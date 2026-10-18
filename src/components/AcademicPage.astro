@@ -54,7 +54,6 @@ const photos = page === 'gallery' ? (await getCollection('gallery')).sort((a, b)
           {member.image && <img src={assetPath(member.image)} alt={en ? member.name : member.nameZh} width="160" height="190" loading="lazy" />}
           <div><h4>{en ? member.name : member.nameZh} <span class="member-native">{en ? member.nameZh : member.name}</span></h4>
             <p class="member-role">{en ? member.role : member.roleZh}{member.pi && <span class="member-pi" title={en ? 'Principal Investigator' : '课题组负责人'}> · PI</span>}</p>
-            <p>{en ? member.description : member.descriptionZh}</p>
             {member.homepage && <a class="small-link" href={member.homepage}>{en ? member.homepageLabel : member.homepageLabelZh} <span aria-hidden="true">↗</span></a>}
           </div>
         </article>)}</div>

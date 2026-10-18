@@ -140,17 +140,15 @@ test('current students contain exactly the four confirmed names and no former fa
   }
 });
 
-test('current PhD students show confirmed affiliations without invented photos, links or PI labels', () => {
+test('student cards show names and roles without repeating school affiliations', () => {
   for (const locale of ['en', 'zh']) {
     const members = [...readPage(locale, 'people/').matchAll(/<article class="member">([\s\S]*?)<\/article>/g)].map((match) => match[1]);
     assert.equal(members.length, 4);
-    for (const member of members) assert.doesNotMatch(member, /class="member-pi"|<img|<a /);
-    for (const member of members.slice(0, 2)) assert.match(member, /Peking University|北京大学/);
-    assert.match(members[2], /Shanghai Jiao Tong University|上海交通大学/);
-    assert.match(members[3], /The Hong Kong Polytechnic University|香港理工大学/);
-    for (const member of members.slice(2)) {
-      assert.match(member, locale === 'en' ? /Eastern Institute of Technology, Ningbo/ : /东方理工/);
-      assert.match(member, /joint|联培|联合培养/i);
+    for (const member of members) {
+      assert.doesNotMatch(member, /class="member-pi"|<img|<a /);
+      assert.match(member, locale === 'en' ? /PhD student/ : /博士研究生/);
+      assert.doesNotMatch(member, /University|Institute of Technology|北京大学|上海交通大学|香港理工大学|东方理工|Joint training|联合培养/);
+      assert.equal([...member.matchAll(/<p\b/g)].length, 1);
     }
   }
 });
