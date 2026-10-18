@@ -42,13 +42,13 @@ const photos = page === 'gallery' ? (await getCollection('gallery')).sort((a, b)
 
   {page === 'people' && <>
     <section aria-labelledby="current-members">
-      <h2 id="current-members" class="section-title">{en ? 'Current members' : '当前成员'}</h2>
+      <h2 id="current-members" class="section-title">{en ? 'Current PhD Students' : '在读博士生'}</h2>
       <div class="members">{members.map(({ data: member }) => <article class="member">
-        <img src={assetPath(member.image)} alt={en ? member.name : member.nameZh} width="160" height="190" loading="lazy" />
+        {member.image && <img src={assetPath(member.image)} alt={en ? member.name : member.nameZh} width="160" height="190" loading="lazy" />}
         <div><h3>{en ? member.name : member.nameZh} <span class="member-native">{en ? member.nameZh : member.name}</span></h3>
           <p class="member-role">{en ? member.role : member.roleZh}{member.pi && <span class="member-pi" title={en ? 'Principal Investigator' : '课题组负责人'}> · PI</span>}</p>
           <p>{en ? member.description : member.descriptionZh}</p>
-          <a class="small-link" href={member.homepage}>{en ? member.homepageLabel : member.homepageLabelZh} <span aria-hidden="true">↗</span></a>
+          {member.homepage && <a class="small-link" href={member.homepage}>{en ? member.homepageLabel : member.homepageLabelZh} <span aria-hidden="true">↗</span></a>}
         </div>
       </article>)}</div>
     </section>
